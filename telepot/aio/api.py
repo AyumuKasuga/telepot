@@ -37,7 +37,7 @@ def _compose_timeout(req, **user_kw):
 def _compose_data(req, **user_kw):
     token, method, params, files = req
 
-    data = aiohttp.helpers.FormData()
+    data = aiohttp.FormData()
 
     if params:
         for key,value in params.items():
@@ -74,7 +74,7 @@ def _transform(req, **user_kw):
     kwargs = {'data':data, 'connector':connector}
     kwargs.update(user_kw)
 
-    return aiohttp.post, (url,), kwargs, timeout
+    return aiohttp.request, ('POST', url,), kwargs, timeout
 
 async def _parse(response):
     try:
@@ -112,4 +112,4 @@ async def request(req, **user_kw):
 
 def download(req):
     with aiohttp.Timeout(_timeout):
-        return aiohttp.get(_fileurl(req))
+        return aiohttp.request('GET', _fileurl(req))
